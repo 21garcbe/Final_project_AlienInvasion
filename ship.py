@@ -98,6 +98,10 @@ class Ship:
         if self.rotating_right:
             self.angle -= self.rotation_speed
 
+        #limit rotation 
+        self.angle = max(-30, min(30, self.angle))
+        
+        #rotate the original image by the current angle to get the new image
         self.image = pygame.transform.rotate(self.original_image, self.angle)
 
         #update hitbox to match new rotated image
