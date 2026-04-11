@@ -63,10 +63,8 @@ class Ship:
         if self.moving_left and self.rect.left > self.boundaries.left:
             self.x_pos -= temp_speed
 
-        # =========================
+        
         # NEW: Vertical movement
-        # =========================
-
         # Move up (but stop at halfway point)
         if self.moving_up and self.rect.top > self.top_limit:
             self.y_pos -= temp_speed
@@ -75,7 +73,7 @@ class Ship:
         if self.moving_down and self.rect.bottom < self.boundaries.bottom:
             self.y_pos += temp_speed
 
-        #update hitbox position based on ship movement
+        #update hitbox position based on ship movement (x and y positions)
         self.rect.x = self.x_pos
         self.rect.y = self.y_pos
 
