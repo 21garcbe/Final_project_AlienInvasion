@@ -32,11 +32,21 @@ class Ship:
         #draw ship at bottom center of screen
         self.rect.midbottom = self.boundaries.midbottom
 
-        #movement flags
+        #horizontal movement flags
         self.moving_right = False
         self.moving_left = False
         self.x_pos = float(self.rect.x)
         self.arsenal = arsenal
+
+        # NEW: vertical movement flags
+        self.moving_up = False
+        self.moving_down = False
+
+        # NEW: floating-point y position for smooth vertical movement
+        self.y_pos = float(self.rect.y)
+
+        # NEW: define top movement boundary (halfway up screen)
+        self.top_limit = self.boundaries.height // 2
 
     def update(self):
         """Update ships position based on movement flags for current frame"""
@@ -53,9 +63,21 @@ class Ship:
         if self.moving_left and self.rect.left > self.boundaries.left:
             self.x_pos -= temp_speed
 
+        # =========================
+        # NEW: Vertical movement
+        # =========================
+
+        # Move up (but stop at halfway point)
+        if self.moving_up and self.rect.top > self.top_limit:
+            self.y_pos -= temp_speed
+
+        # Move down (but stop at bottom of screen)
+        if self.moving_down and self.rect.bottom < self.boundaries.bottom:
+            self.y_pos += temp_speed
+
         #update hitbox position based on ship movement
         self.rect.x = self.x_pos
-
+        self.rect.y = self.y_pos
 
     def draw(self):
         """Draw the ship and its arsenal to the screen.
