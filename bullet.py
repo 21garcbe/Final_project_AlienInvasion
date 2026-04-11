@@ -1,6 +1,7 @@
 import pygame
 from typing import TYPE_CHECKING
 from pygame.sprite import Sprite
+import math
 
 if TYPE_CHECKING:
     from alien_invasion import AlienInvasion
@@ -21,8 +22,15 @@ class Bullet(Sprite):
 
         self.image = pygame.image.load(self.settings.bullet_file)
         self.image = pygame.transform.scale(self.image, (self.settings.bullet_width, self.settings.bullet_height))
+        #bullet rotation logic
+        self.angle = game.ship.angle
+        self.image = pygame.transform.rotate(self.image, self.angle)
+        
         self.rect = self.image.get_rect()
         self.rect.midtop = game.ship.rect.midtop
+        
+        #Added xpos 
+        self.x_pos =float(self.rect.x)
         self.y_pos = float(self.rect.y)
     
     def update(self):
@@ -35,3 +43,6 @@ class Bullet(Sprite):
         self.screen.blit(self.image, self.rect)
 
 #TODO: ensure bullets change position based on ships rotation angle
+
+
+
