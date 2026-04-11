@@ -29,13 +29,18 @@ class Bullet(Sprite):
         self.rect = self.image.get_rect()
         self.rect.midtop = game.ship.rect.midtop
         
-        #Added xpos 
+        #Added xpos to angle sprite starting angle based on ship angle
         self.x_pos =float(self.rect.x)
         self.y_pos = float(self.rect.y)
-    
+
+        #TODO: Calculate bullet trajectory based on ships angle
+        self.x_velocity = math.sin(self.angle) * self.settings.bullet_speed
+        self.y_velocity = math.cos(self.angle) * self.settings.bullet_speed
     def update(self):
         """Update bullets position to move it up the screen based on speed settings."""
-        self.y_pos -= self.settings.bullet_speed
+        self.x_pos += self.x_velocity
+        self.y_pos -= self.y_velocity
+        self.rect.x = self.x_pos
         self.rect.y = self.y_pos
 
     def draw_bullet(self):
