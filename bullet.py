@@ -34,8 +34,9 @@ class Bullet(Sprite):
         self.y_pos = float(self.rect.y)
 
         #TODO: Calculate bullet trajectory based on ships angle
-        self.x_velocity = math.sin(self.angle) * self.settings.bullet_speed
-        self.y_velocity = math.cos(self.angle) * self.settings.bullet_speed
+        angle_rad = math.radians(self.angle)
+        self.x_velocity = -math.sin(angle_rad) * self.settings.bullet_speed
+        self.y_velocity = math.cos(angle_rad) * self.settings.bullet_speed
     def update(self):
         """Update bullets position to move it up the screen based on speed settings."""
         self.x_pos += self.x_velocity

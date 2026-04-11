@@ -31,11 +31,13 @@ class Arsenal:
         self._remove_offscreen_bullets()
     
     def _remove_offscreen_bullets(self):
-        """Remove bullets that have moved off the top of the screen from the arsenal."""
+        """Remove bullets that have moved off the screen."""
         for bullet in self.arsenal.copy():
-            #remove bullet if it has moved off the top of the screen
-            if bullet.rect.bottom <= 0:
-                self.arsenal.remove(bullet)
+            #remove bullet if it has moved off any edges of the screen
+            for bullet in self.arsenal.copy():
+                if (bullet.rect.bottom < 0 or bullet.rect.top > self.settings.screen_height or
+                    bullet.rect.right < 0 or bullet.rect.left > self.settings.screen_width):
+                    self.arsenal.remove(bullet)
 
     def draw(self):
         """Draw all bullets fired from arsenal to the screen."""
