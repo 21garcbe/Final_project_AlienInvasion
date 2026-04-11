@@ -47,7 +47,7 @@ class Ship:
 
         #define top movement boundary (halfway up screen)
         self.top_limit = self.boundaries.height // 2
-        
+
         #initialize angle, rotation movement flags, turn speed, and original ship sprite for rotation
         self.original_image = pygame.image.load(self.settings.ship_file)
         self.original_image = pygame.transform.scale(self.original_image, (self.settings.ship_width, self.settings.ship_height))
@@ -59,8 +59,11 @@ class Ship:
         #rotation movement flags
         self.rotating_left = False
         self.rotating_right = False
-        #turn speed (degrees per frame?)
+        #turn speed (degrees per frame)
         self.rotation_speed = 5
+
+        #return speed for ship to smoothly rotate back to center when not rotating
+        self.return_speed = 2.5
 
     def update(self):
         """Update ships position based on movement flags for current frame"""
@@ -92,17 +95,25 @@ class Ship:
         self.rect.y = self.y_pos
 
         #rotation logic
-        if self.rotating_left:
+        if self.rotating_left and not self.rotating_right:
             self.angle += self.rotation_speed
-        if self.rotating_right:
+        elif self.rotating_right and not self.rotating_left:
             self.angle -= self.rotation_speed
+        else:
+            #when not rotating, drift back to 0 (straight up)
+            if self.angle > 0:
+                self.angle -= self.return_speed
+            elif self.angle < 0:
+                self.angle += self.return_speed
+                
 
         #limit rotation 
         self.angle = max(-30, min(30, self.angle))
 
+       
+
         #rotate the original image by the current angle to get the new image
         self.image = pygame.transform.rotate(self.original_image, self.angle)
-
         #update hitbox to match new rotated image
         self.rect = self.image.get_rect(center=self.rect.center)
 
