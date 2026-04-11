@@ -38,15 +38,30 @@ class Ship:
         self.x_pos = float(self.rect.x)
         self.arsenal = arsenal
 
-        # NEW: vertical movement flags
+        #vertical movement flags
         self.moving_up = False
         self.moving_down = False
 
-        # NEW: floating-point y position for smooth vertical movement
+        #floating-point y position for smooth vertical movement
         self.y_pos = float(self.rect.y)
 
-        # NEW: define top movement boundary (halfway up screen)
+        #define top movement boundary (halfway up screen)
         self.top_limit = self.boundaries.height // 2
+
+        #TODO: Implement 180 degree rotation capability in the ship
+        #initialize angle, rotation movement flags, turn speed, and original ship sprite for rotation
+        self.original_image = pygame.image.load(self.settings.ship_file)
+        self.original_image = pygame.transform.scale(self.original_image, (self.settings.ship_width, self.settings.ship_height))
+
+        #start with no rotation (facing up)
+        self.angle = 0
+        self.image = self.original_image
+
+        #rotation movement flags
+        self.rotating_left = False
+        self.rotating_right = False
+        #turn speed (degrees per frame?)
+        self.rotation_speed = 5
 
     def update(self):
         """Update ships position based on movement flags for current frame"""
@@ -64,7 +79,7 @@ class Ship:
             self.x_pos -= temp_speed
 
         
-        # NEW: Vertical movement
+        # Vertical movement
         # Move up (but stop at halfway point)
         if self.moving_up and self.rect.top > self.top_limit:
             self.y_pos -= temp_speed
@@ -76,6 +91,17 @@ class Ship:
         #update hitbox position based on ship movement (x and y positions)
         self.rect.x = self.x_pos
         self.rect.y = self.y_pos
+
+        #rotation logic
+        if self.rotating_left:
+            self.angle += self.rotation_speed
+        if self.rotating_right:
+            self.angle -= self.rotation_speed
+
+        self.image = pygame.transform.rotate(self.original_image, self.angle)
+
+        #update hitbox to match new rotated image
+        self.rect = self.image.get_rect(center=self.rect.center)
 
     def draw(self):
         """Draw the ship and its arsenal to the screen.

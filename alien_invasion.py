@@ -96,8 +96,11 @@ class AlienInvasion:
             self.ship.moving_up = True
         elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
             self.ship.moving_down = True
-
-
+        #Rotational movement flags
+        elif event.key == pygame.K_q:
+            self.ship.rotating_left = True
+        elif event.key == pygame.K_e:
+            self.ship.rotating_right = True
         elif event.key == pygame.K_SPACE:
             if self.ship.fire():
                 #play laser sound effect when firing
@@ -105,7 +108,7 @@ class AlienInvasion:
                 self.laser_sound.fadeout(250)
                 
 
-        elif event.key == pygame.K_q:
+        elif event.key == pygame.K_ESCAPE:
             self.running = False
             pygame.quit()
             sys.exit()
@@ -123,6 +126,12 @@ class AlienInvasion:
             self.ship.moving_up = False
         elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
             self.ship.moving_down = False
+
+        #Rotational movement flags
+        elif event.key == pygame.K_q:
+            self.ship.rotating_left = False
+        elif event.key == pygame.K_e:
+            self.ship.rotating_right = False
 
 if __name__ == '__main__':
     ai = AlienInvasion()
