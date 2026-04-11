@@ -85,10 +85,10 @@ class AlienInvasion:
                 self._check_keyup_events(event)
     
     def _check_keydown_events(self, event):
-        """Responds to keypresses for movement and firing actions."""
-        if event.key == pygame.K_RIGHT:
+        """Responds to keypresses for movement and firing actions.(arrowkeys or WASD)"""
+        if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
             self.ship.moving_right = True
-        elif event.key == pygame.K_LEFT:
+        elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
             self.ship.moving_left = True
         elif event.key == pygame.K_SPACE:
             if self.ship.fire():
@@ -103,11 +103,11 @@ class AlienInvasion:
             sys.exit()
             
     def _check_keyup_events(self, event):
-        """Responds to key releases. Stopping movement when arrow keys are released."""
+        """Responds to key releases (arrowkeys or WASD). Stopping movement when arrow keys are released."""
 
-        if event.key == pygame.K_RIGHT:
+        if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
             self.ship.moving_right = False
-        elif event.key == pygame.K_LEFT:
+        elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
             self.ship.moving_left = False
 
 if __name__ == '__main__':
