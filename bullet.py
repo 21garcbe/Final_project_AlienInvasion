@@ -33,3 +33,5 @@ class Bullet(Sprite):
     def draw_bullet(self):
         """Draw the bullet sprite and hitbox to the screen."""
         self.screen.blit(self.image, self.rect)
+
+#TODO: ensure bullets change position based on ships rotation angle

@@ -47,8 +47,7 @@ class Ship:
 
         #define top movement boundary (halfway up screen)
         self.top_limit = self.boundaries.height // 2
-
-        #TODO: Implement 180 degree rotation capability in the ship
+        
         #initialize angle, rotation movement flags, turn speed, and original ship sprite for rotation
         self.original_image = pygame.image.load(self.settings.ship_file)
         self.original_image = pygame.transform.scale(self.original_image, (self.settings.ship_width, self.settings.ship_height))
@@ -100,7 +99,7 @@ class Ship:
 
         #limit rotation 
         self.angle = max(-30, min(30, self.angle))
-        
+
         #rotate the original image by the current angle to get the new image
         self.image = pygame.transform.rotate(self.original_image, self.angle)
 
