@@ -1,5 +1,6 @@
 import pygame
 from typing import TYPE_CHECKING
+import random
 
 if TYPE_CHECKING:
     from alien_invasion import AlienInvasion
@@ -29,8 +30,11 @@ class Ship:
         
         #collision rectangle (hitbox) for ship
         self.rect = self.image.get_rect()
-        #draw ship at bottom center of screen
-        self.rect.midbottom = self.boundaries.midbottom
+
+        #implemented random starting position for ship
+        #calculates random x pos within boundaries and sets y to bottom of screen
+        self.rect.x = random.randint(0, self.boundaries.width - self.rect.width)
+        self.rect.bottom = self.boundaries.bottom
 
         #horizontal movement flags
         self.moving_right = False
