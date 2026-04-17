@@ -3,7 +3,8 @@ import pygame
 from settings import Settings
 from ship import Ship
 from arsenal import Arsenal
-from alien import Alien
+#from alien import Alien
+from alien_fleet import AlienFleet
 
 class AlienInvasion:
     """Overall class to manage game assets and behavior."""
@@ -38,8 +39,9 @@ class AlienInvasion:
         #set up ship
         self.ship = Ship(self, Arsenal(self))
 
-        #TEMP CREATE ALIEN
-        self.alien = Alien(self, 10, 10)
+        #create fleet of aliens
+        self.alien_fleet = AlienFleet(self)
+        self.alien_fleet.create_fleet()
 
         #set up sound effects
         pygame.mixer.init()
@@ -58,7 +60,7 @@ class AlienInvasion:
             #update ship position based on movement flags
             self.ship.update()
             #update alien
-            self.alien.update()
+            #self.alien.update()
             #call update screen function
             self._update_screen() 
             self.clock.tick(self.settings.FPS)
@@ -74,7 +76,8 @@ class AlienInvasion:
         self.screen.blit(self.bg, (0, 0))
         #draw ship to screen and update display    
         self.ship.draw()
-        self.alien.draw_alien()
+        #call draw fleet function from alien_fleet to draw aliens to screen
+        self.alien_fleet.draw_fleet()
         pygame.display.flip()
 
     def _check_events(self):
