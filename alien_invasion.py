@@ -3,7 +3,6 @@ import pygame
 from settings import Settings
 from ship import Ship
 from arsenal import Arsenal
-#from alien import Alien
 from alien_fleet import AlienFleet
 
 class AlienInvasion:
@@ -47,7 +46,9 @@ class AlienInvasion:
         pygame.mixer.init()
         self.laser_sound = pygame.mixer.Sound(self.settings.laser_sound)
         self.laser_sound.set_volume(0.7)
-
+        #impact sound
+        self.impact_sound = pygame.mixer.Sound(self.settings.impact_sound)
+        self.impact_sound.set_volume(0.7)
 
     def run_game(self):
         """Start the main game loop
@@ -59,12 +60,40 @@ class AlienInvasion:
             self._check_events()
             #update ship position based on movement flags
             self.ship.update()
-            #update alien fleet
+            #update alien fleet 
             self.alien_fleet.update_fleet()
+            #update collision checks
+            self._check_collisions()
             #call update screen function
             self._update_screen() 
             self.clock.tick(self.settings.FPS)
 
+    def _check_collisions(self):
+        """Check collisions between ship and aliens, aliens vs bottom of screen, bullets and aliens"""
+
+        #ship collisions
+        if self.ship.check_collisions(self.alien_fleet.fleet):
+            self._reset_level()
+            #subtract a life
+        #check collisions at bottom of screen
+        if self.alien_fleet.check_fleet_bottom():
+            self._reset_level()
+
+
+
+        #check bullet and alien collision
+        collisions = self.alien_fleet.check_collisions(self.ship.arsenal.arsenal)
+        if collisions:
+            self.impact_sound.play()
+            self.impact_sound.fadeout(500)
+
+            
+    
+    def _reset_level(self):
+        self.ship.arsenal.arsenal.empty()
+        self.alien_fleet.fleet.empty()
+        self.alien_fleet.create_fleet()
+    
 
     def _update_screen(self):
         """Render the current frame to the display.
