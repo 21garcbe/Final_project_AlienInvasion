@@ -34,6 +34,8 @@ class AlienFleet:
 
         #positioning each alien individually, starting at x_offset
         for column in range(fleet_width):
+            if column % 2 == 0:
+                continue
             current_x = alien_width * column + x_offset
             self._create_alien(current_x, 10)
 
