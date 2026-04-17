@@ -31,6 +31,8 @@ class Settings:
 
         #Alien settings
         self.alien_file = Path.cwd() / 'Assets' / 'images' / 'enemy_4.png'
-        self.fleet_speed = 1
+        self.fleet_speed = 5
         self.alien_width = 40
         self.alien_height = 40
+        #fleet direction of 1 represents right; -1 represents left
+        self.fleet_direction = 1
