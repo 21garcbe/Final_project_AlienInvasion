@@ -23,34 +23,46 @@ class AlienFleet:
     def create_fleet(self):
         """Create the fleet structure of alien instances"""
         alien_width = self.settings.alien_width
+        alien_height = self.settings.alien_height
         screen_width = self.settings.screen_width
+        screen_height = self.settings.screen_height
 
 
-        fleet_width = self.calculate_fleet_size(alien_width, screen_width)
-
-        half_screen = self.settings.screen_width // 2
+        fleet_width, fleet_height = self.calculate_fleet_size(alien_width, screen_width, alien_height, screen_height)
+        
+        half_screen = self.settings.screen_height // 2
+        fleet_vertical_space = fleet_height * alien_height
         fleet_horizontal_space = fleet_width * alien_width
         x_offset = int((screen_width - fleet_horizontal_space) // 2)
+        y_offset = int((half_screen-fleet_vertical_space)//2)
+        
+        for row in range(fleet_height):
+            #positioning each alien individually, starting at x_offset and y_offset
+            for column in range(fleet_width):
+                current_x = alien_width * column + x_offset
+                current_y = alien_height * row + y_offset
+                if column % 2 == 0 or row %2 ==0:
+                    continue
+                self._create_alien(current_x, current_y)
 
-        #positioning each alien individually, starting at x_offset
-        for column in range(fleet_width):
-            if column % 2 == 0:
-                continue
-            current_x = alien_width * column + x_offset
-            self._create_alien(current_x, 10)
 
 
-
-    def calculate_fleet_size(self, alien_width, screen_width):
+    def calculate_fleet_size(self, alien_width, screen_width, alien_height, screen_height):
         fleet_width = (screen_width // alien_width)
+        fleet_height = ((screen_height/2) // alien_height)
 
         # allow for centered alien
         if fleet_width % 2 == 0:
             fleet_width -= 1
         else:
             fleet_width -= 2
+        
+        if fleet_height % 2 == 0:
+            fleet_height -=1
+        else:
+            fleet_height -=2
 
-        return fleet_width
+        return int(fleet_width), int(fleet_height)
         
     def _create_alien(self, current_x: int, current_y: int):
         """Create an alien and place it in the fleet."""
