@@ -20,6 +20,7 @@ class Settings:
         self.ship_width = 40
         self.ship_height = 60
         self.ship_speed = 5
+        self.starting_ship_count = 3
         
         #set bullet image filepath + settings
         self.bullet_file = Path.cwd() / 'Assets' / 'images' / 'laserBlast.png'
@@ -32,7 +33,7 @@ class Settings:
 
         #Alien settings
         self.alien_file = Path.cwd() / 'Assets' / 'images' / 'enemy_4.png'
-        self.fleet_speed = 2
+        self.fleet_speed = 8
         self.alien_width = 25
         self.alien_height = 25
         #fleet direction of 1 represents right; -1 represents left

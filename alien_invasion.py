@@ -1,6 +1,7 @@
 import sys
 import pygame
 from settings import Settings
+from game_stats import GameStats
 from ship import Ship
 from arsenal import Arsenal
 from alien_fleet import AlienFleet
@@ -23,6 +24,7 @@ class AlienInvasion:
         """
         pygame.init()
         self.settings = Settings()
+        self.game_stats = GameStats(self.settings.starting_ship_count)
 
 
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
@@ -42,6 +44,9 @@ class AlienInvasion:
         self.alien_fleet = AlienFleet(self)
         self.alien_fleet.create_fleet()
 
+        #set game active flag to True
+        self.game_active = True
+
         #set up sound effects
         pygame.mixer.init()
         self.laser_sound = pygame.mixer.Sound(self.settings.laser_sound)
@@ -58,12 +63,13 @@ class AlienInvasion:
         while self.running:
             #call event listener function
             self._check_events()
-            #update ship position based on movement flags
-            self.ship.update()
-            #update alien fleet 
-            self.alien_fleet.update_fleet()
-            #update collision checks
-            self._check_collisions()
+            if self.game_active:
+                #update ship position based on movement flags
+                self.ship.update()
+                #update alien fleet 
+                self.alien_fleet.update_fleet()
+                #update collision checks
+                self._check_collisions()
             #call update screen function
             self._update_screen() 
             self.clock.tick(self.settings.FPS)
@@ -73,11 +79,11 @@ class AlienInvasion:
 
         #ship collisions
         if self.ship.check_collisions(self.alien_fleet.fleet):
-            self._reset_level()
+            self._check_game_status()
             #subtract a life
         #check collisions at bottom of screen
         if self.alien_fleet.check_fleet_bottom():
-            self._reset_level()
+            self._check_game_status()
 
 
 
@@ -92,7 +98,14 @@ class AlienInvasion:
             self._reset_level()
 
     
-    
+    def _check_game_status(self):
+        if self.game_stats.ships_left > 0:
+            self.game_stats.ships_left -= 1
+            self._reset_level()
+        else: 
+            self.game_active = False
+
+        
     
     def _reset_level(self):
         self.ship.arsenal.arsenal.empty()
