@@ -35,6 +35,8 @@ class Ship:
         #calculates random x pos within boundaries and sets y to bottom of screen
         self.rect.x = random.randint(0, self.boundaries.width - self.rect.width)
         self.rect.bottom = self.boundaries.bottom
+        self.x_pos = float(self.rect.x)
+        self.y_pos = float(self.rect.y)
 
         #horizontal movement flags
         self.moving_right = False
@@ -46,8 +48,8 @@ class Ship:
         self.moving_up = False
         self.moving_down = False
 
-        #floating-point y position for smooth vertical movement
-        self.y_pos = float(self.rect.y)
+        
+        
 
         #define top movement boundary (halfway up screen)
         self.top_limit = self.boundaries.height // 2
@@ -68,7 +70,7 @@ class Ship:
 
         #return speed for ship to smoothly rotate back to center when not rotating
         self.return_speed = 2.5
-        
+
     def _center_ship(self):
         self.rect.midbottom = self.boundaries.midbottom
         self.x_pos = float(self.rect.x)
