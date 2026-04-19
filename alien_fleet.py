@@ -65,21 +65,21 @@ class AlienFleet:
 
         
         for row in range(fleet_height):
-            spread_bound = max(1, (fleet_height - row -1) //2)
+            spread_bound = max(1, fleet_height - row -1) 
             left_bound = center_col - spread_bound
             right_bound = center_col + spread_bound
         
-        for column in range(fleet_width):
-            if column < left_bound or column > right_bound:
-                continue
+            for column in range(fleet_width):
+                if column < left_bound or column > right_bound:
+                    continue
 
-            if column % 2 ==0 or row %2 ==0:
-                continue
+                if column % 2 ==0 or row %2 ==0:
+                    continue
 
-            current_x = alien_width * column + x_offset
-            current_y = alien_height * row + y_offset
+                current_x = alien_width * column + x_offset
+                current_y = alien_height * row + y_offset
 
-            self._create_alien(current_x,current_y)
+                self._create_alien(current_x,current_y)
         
         
 
