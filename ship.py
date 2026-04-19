@@ -30,13 +30,17 @@ class Ship:
         #collision rectangle (hitbox) for ship
         self.rect = self.image.get_rect()
         #draw ship at bottom center of screen
-        self.rect.midbottom = self.boundaries.midbottom
+        self._center_ship()
 
         #movement flags
         self.moving_right = False
         self.moving_left = False
-        self.x_pos = float(self.rect.x)
+        
         self.arsenal = arsenal
+
+    def _center_ship(self):
+        self.rect.midbottom = self.boundaries.midbottom
+        self.x_pos = float(self.rect.x)
 
     def update(self):
         """Update ships position based on movement flags for current frame"""
@@ -70,3 +74,9 @@ class Ship:
         calls the fire_bullet method from arsenal class and return the result
         """
         return self.arsenal.fire_bullet()
+    
+    def check_collisions(self, other_group):
+        if pygame.sprite.spritecollideany(self,other_group):
+            self._center_ship()
+            return True
+        return False
