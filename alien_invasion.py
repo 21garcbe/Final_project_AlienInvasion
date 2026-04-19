@@ -1,5 +1,6 @@
 import sys
 import pygame
+import random
 from settings import Settings
 from game_stats import GameStats
 from ship import Ship
@@ -42,7 +43,7 @@ class AlienInvasion:
 
         #create fleet of aliens
         self.alien_fleet = AlienFleet(self)
-        self.alien_fleet.create_fleet()
+        #self.alien_fleet.create_fleet()
 
         #set game active flag to True
         self.game_active = True
@@ -96,6 +97,8 @@ class AlienInvasion:
         #check for alien fleet destroyed to reset
         if self.alien_fleet.check_destroyed_status():
             self._advance_level()
+            self._set_current_level_pattern()
+            self._spawn_current_level()
 
     
     def _advance_level(self):
@@ -103,11 +106,31 @@ class AlienInvasion:
             and resets object instances on level 
          """
         self.game_stats.level += 1
+        
+    def _spawn_current_level(self):
+        """when called resets players arsenal and alien fleet, and recenters the ship"""
         self.ship.arsenal.arsenal.empty()
         self.alien_fleet.fleet.empty()
-        self.alien_fleet.create_fleet()
+        self.alien_fleet.create_fleet(self.game_stats.current_pattern)
+        self.ship._center_ship()
+
+    def _set_current_level_pattern(self):
+        """sets the fleet formation pattern for the current level by random choice
+        
+        when starting the game (level == 1) fleet will always be a rectangle, otherwise 
+        it makes a random choice between the 3 possible formations and sets that pattern in
+        game_stats.py
+        """
+        if self.game_stats.level ==1:
+            self.game_stats.current_pattern = "rectangle"
+        else:
+            self.game_stats.current_pattern = random.choice(["rectangle","triangle","m_shape"])
+        
 
     def _check_game_status(self):
+        """checks for player lives left and decides to reset if player has lives
+          or "pause" (freeze by flagging game_active = False)"""
+        
         if self.game_stats.ships_left > 0:
             self.game_stats.ships_left -= 1
             self._reset_level()
@@ -117,9 +140,12 @@ class AlienInvasion:
         
     
     def _reset_level(self):
+        """resets current level without advancing. resets current instances of ships aresenal and fleet
+        while preserving the levels chosen fleet shape
+        """
         self.ship.arsenal.arsenal.empty()
         self.alien_fleet.fleet.empty()
-        self.alien_fleet.create_fleet()
+        self.alien_fleet.create_fleet(self.game_stats.current_pattern)
     
 
     def _update_screen(self):

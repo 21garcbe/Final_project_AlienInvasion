@@ -1,5 +1,6 @@
 import pygame
 from alien import Alien
+from game_stats import GameStats
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -9,7 +10,8 @@ class AlienFleet:
     """A class to manage the fleet of aliens."""
     
     def __init__(self, game: 'AlienInvasion'):
-        """Initialize the fleet and set its starting position."""
+        """Initializes the fleet, sets its starting position, and
+        asks for current fleet formation pattern from game_stats"""
         
         self.game = game
         self.fleet = pygame.sprite.Group()
@@ -17,22 +19,35 @@ class AlienFleet:
         self.fleet_direction = self.settings.fleet_direction
         self.fleet_drop_speed = self.settings.fleet_drop_speed
 
-        #temp create fleet of aliens
-        #self.create_fleet()
+        
+        #create fleet of aliens based on current pattern
+        self.create_fleet(self.game.game_stats.current_pattern)
     
-    def create_fleet(self):
+    def create_fleet(self, pattern):
         """Create the fleet structure of alien instances"""
         alien_width = self.settings.alien_width
         alien_height = self.settings.alien_height
         screen_width = self.settings.screen_width
         screen_height = self.settings.screen_height
 
-
+        #calculate sizes for fleet width and height
         fleet_width, fleet_height = self.calculate_fleet_size(alien_width, screen_width, alien_height, screen_height)
-        
+        #calculate x and y offsets
         x_offset, y_offset = self.calculate_offsets(alien_width, alien_height, screen_width, fleet_width, fleet_height)
         
-        self.create_fleet_rectangle(alien_width, alien_height, fleet_width, fleet_height, x_offset, y_offset)
+        #figure out which
+        if pattern == "rectangle":
+            self.create_fleet_rectangle(
+                alien_width, alien_height, fleet_width, fleet_height, x_offset, y_offset
+            )
+        elif pattern == "triangle":
+            self.create_fleet_triangle(
+                alien_width, alien_height, fleet_width, fleet_height, x_offset, y_offset
+            )
+        elif pattern == "m_shape":
+            self.create_fleet_m_formation(
+                alien_width, alien_height, fleet_width, fleet_height, x_offset, y_offset
+            )
 
     def create_fleet_rectangle(self, alien_width, alien_height, fleet_width, fleet_height, x_offset, y_offset):
         for row in range(fleet_height):
@@ -42,6 +57,13 @@ class AlienFleet:
                 if column % 2 == 0 or row %2 ==0:
                     continue
                 self._create_alien(current_x, current_y)
+
+    def create_fleet_triangle(self, alien_width, alien_height, fleet_width, fleet_height, x_offset, y_offset):
+        pass
+
+    def create_fleet_m_formation(self, alien_width, alien_height, fleet_width, fleet_height, x_offset, y_offset):
+        pass
+
 
     def calculate_offsets(self, alien_width, alien_height, screen_width, fleet_width, fleet_height):
         half_screen = self.settings.screen_height // 2
