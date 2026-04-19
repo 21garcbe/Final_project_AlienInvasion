@@ -18,7 +18,7 @@ class AlienFleet:
         self.fleet_drop_speed = self.settings.fleet_drop_speed
 
         #temp create fleet of aliens
-        self.create_fleet()
+        #self.create_fleet()
     
     def create_fleet(self):
         """Create the fleet structure of alien instances"""

@@ -93,11 +93,20 @@ class AlienInvasion:
             self.impact_sound.play()
             self.impact_sound.fadeout(500)
         
-
+        #check for alien fleet destroyed to reset
         if self.alien_fleet.check_destroyed_status():
-            self._reset_level()
+            self._advance_level()
 
     
+    def _advance_level(self):
+        """When called increments level number in game stats
+            and resets object instances on level 
+         """
+        self.game_stats.level += 1
+        self.ship.arsenal.arsenal.empty()
+        self.alien_fleet.fleet.empty()
+        self.alien_fleet.create_fleet()
+
     def _check_game_status(self):
         if self.game_stats.ships_left > 0:
             self.game_stats.ships_left -= 1
