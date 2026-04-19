@@ -50,6 +50,7 @@ class AlienFleet:
             )
 
     def create_fleet_rectangle(self, alien_width, alien_height, fleet_width, fleet_height, x_offset, y_offset):
+        """draws alien fleet by drawing each alien into rows and columns, taking into account x and y offset and spacing"""
         for row in range(fleet_height):
             for column in range(fleet_width):
                 current_x = alien_width * column + x_offset
@@ -59,7 +60,28 @@ class AlienFleet:
                 self._create_alien(current_x, current_y)
 
     def create_fleet_triangle(self, alien_width, alien_height, fleet_width, fleet_height, x_offset, y_offset):
-        pass
+        """draws alien fleet in a triangle shape by drawing each alien into rows and columns , taking into account x and y offet and spacing"""
+        center_col = fleet_width // 2
+
+        
+        for row in range(fleet_height):
+            spread_bound = max(1, (fleet_height - row -1) //2)
+            left_bound = center_col - spread_bound
+            right_bound = center_col + spread_bound
+        
+        for column in range(fleet_width):
+            if column < left_bound or column > right_bound:
+                continue
+
+            if column % 2 ==0 or row %2 ==0:
+                continue
+
+            current_x = alien_width * column + x_offset
+            current_y = alien_height * row + y_offset
+
+            self._create_alien(current_x,current_y)
+        
+        
 
     def create_fleet_m_formation(self, alien_width, alien_height, fleet_width, fleet_height, x_offset, y_offset):
         pass
