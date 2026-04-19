@@ -39,7 +39,7 @@ class Ship:
         #horizontal movement flags
         self.moving_right = False
         self.moving_left = False
-        self.x_pos = float(self.rect.x)
+        
         self.arsenal = arsenal
 
         #vertical movement flags
@@ -68,6 +68,10 @@ class Ship:
 
         #return speed for ship to smoothly rotate back to center when not rotating
         self.return_speed = 2.5
+        
+    def _center_ship(self):
+        self.rect.midbottom = self.boundaries.midbottom
+        self.x_pos = float(self.rect.x)
 
     def update(self):
         """Update ships position based on movement flags for current frame"""
@@ -134,3 +138,9 @@ class Ship:
         calls the fire_bullet method from arsenal class and return the result
         """
         return self.arsenal.fire_bullet()
+    
+    def check_collisions(self, other_group):
+        if pygame.sprite.spritecollideany(self,other_group):
+            self._center_ship()
+            return True
+        return False

@@ -20,11 +20,22 @@ class Settings:
         self.ship_width = 40
         self.ship_height = 60
         self.ship_speed = 5
+        self.starting_ship_count = 3
         
         #set bullet image filepath + settings
         self.bullet_file = Path.cwd() / 'Assets' / 'images' / 'laserBlast.png'
         self.laser_sound = Path.cwd() / 'Assets' / 'sound' / 'laser.mp3'
+        self.impact_sound = Path.cwd() / 'Assets' / 'sound' / 'impactSound.mp3'
         self.bullet_speed = 7
         self.bullet_width = 25
         self.bullet_height = 80
         self.bullet_amount = 5
+
+        #Alien settings
+        self.alien_file = Path.cwd() / 'Assets' / 'images' / 'enemy_4.png'
+        self.fleet_speed = 8
+        self.alien_width = 25
+        self.alien_height = 25
+        #fleet direction of 1 represents right; -1 represents left
+        self.fleet_direction = 1
+        self.fleet_drop_speed = 15
