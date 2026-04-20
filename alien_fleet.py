@@ -84,7 +84,37 @@ class AlienFleet:
         
 
     def create_fleet_m_formation(self, alien_width, alien_height, fleet_width, fleet_height, x_offset, y_offset):
-        pass
+        """Creat "m" shaped formation with a row at the top of the screen and 3 columns fit to screen size """
+        top_row = 1
+        center_col = fleet_width // 2
+        left_col = fleet_width // 4
+        right_col = (2 * fleet_width) //4
+
+        for row in range(fleet_height):
+            for column in range(fleet_width):
+                #maintain even spacing by skipping every even column and row
+                if column % 2 == 0 or row % 2== 0:
+                    continue
+            #set flag to false by default
+            place_alien = False
+
+            #if on one of thee columns, place
+            if column == left_col or column == center_col or column == right_col:
+                place_alien = True
+            
+            #if on top row, place
+            if row == top_row and left_col <= column <= right_col:
+                place_alien = True
+            
+            if not place_alien:
+                continue
+
+            current_x = alien_width * column + x_offset
+            current_y = alien_height * row + y_offset
+            self._create_alien(current_x, current_y)
+            
+
+        
 
 
     def calculate_offsets(self, alien_width, alien_height, screen_width, fleet_width, fleet_height):
