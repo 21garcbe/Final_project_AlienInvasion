@@ -92,9 +92,7 @@ class AlienFleet:
 
         for row in range(fleet_height):
             for column in range(fleet_width):
-                #maintain even spacing by skipping every even column and row
-                if column % 2 == 0 or row % 2== 0:
-                    continue
+               
                 #set flag to false by default
                 place_alien = False
 
