@@ -24,7 +24,11 @@ class AlienFleet:
         self.create_fleet(self.game.game_stats.current_pattern)
     
     def create_fleet(self, pattern):
-        """Create the fleet structure of alien instances"""
+        """Create the fleet structure of alien instances based on randomized formation pattern choice
+        
+        Args:
+            pattern (string): The formation type name (i.e "rectangle", "triangle, or "m_shape") 
+        """
         alien_width = self.settings.alien_width
         alien_height = self.settings.alien_height
         screen_width = self.settings.screen_width
@@ -35,7 +39,7 @@ class AlienFleet:
         #calculate x and y offsets
         x_offset, y_offset = self.calculate_offsets(alien_width, alien_height, screen_width, fleet_width, fleet_height)
         
-        #figure out which
+        #check passed pattern string and call the appropriate fleet generation function
         if pattern == "rectangle":
             self.create_fleet_rectangle(
                 alien_width, alien_height, fleet_width, fleet_height, x_offset, y_offset
@@ -96,7 +100,7 @@ class AlienFleet:
                 #set flag to false by default
                 place_alien = False
 
-                #if on one of thee columns, place
+                #if on one of the columns, place
                 if column == left_col or column == center_col or column == right_col:
                     place_alien = True
                 
@@ -116,6 +120,12 @@ class AlienFleet:
 
 
     def calculate_offsets(self, alien_width, alien_height, screen_width, fleet_width, fleet_height):
+        """Calculate forizontal and vertical offsets to center the fleet on screen
+        Positions the fleet horizontally across full screen width and vertically within top half of screen
+
+        returns:
+          the x_offset and y_offset used to position each fleet
+        """
         half_screen = self.settings.screen_height // 2
         fleet_vertical_space = fleet_height * alien_height
         fleet_horizontal_space = fleet_width * alien_width
@@ -126,10 +136,12 @@ class AlienFleet:
 
 
     def calculate_fleet_size(self, alien_width, screen_width, alien_height, screen_height):
+        """Determine the number of aliens that fit horizontally and vertically within screen width and 
+        the upper half of the screen
+        """
         fleet_width = (screen_width // alien_width)
         fleet_height = ((screen_height/2) // alien_height)
 
-        # allow for centered alien
         if fleet_width % 2 == 0:
             fleet_width -= 1
         else:
@@ -144,15 +156,19 @@ class AlienFleet:
         
     def _create_alien(self, current_x: int, current_y: int):
         """Create an alien and place it in the fleet."""
-        #TODO: allow random choice of if alien is flagged tough or not
+       
         tough = self._is_tough_alien()
         new_alien = Alien(self, current_x, current_y, tough = tough)
         self.fleet.add(new_alien)
 
     def _is_tough_alien(self):
+        """Randomly determines whether each newly spawned alien should be tough or not (set to 20% chance)"""
         return random.random() < 0.20
     
     def _check_fleet_edges(self):
+        """Check if any alien in the fleet has hit the left or right edge of the screen
+        if an edge is hit calls _drop_alien_fleet to drop the aliens down and reverses fleet direction
+        """
         alien: Alien
         for alien in self.fleet:
             if alien.check_edges():
@@ -161,6 +177,7 @@ class AlienFleet:
                 break
     
     def _drop_alien_fleet(self):
+        """Moves the entire fleet down by configured drop speed in settings"""
         for alien in self.fleet:
             alien.y += self.fleet_drop_speed
 
@@ -171,11 +188,15 @@ class AlienFleet:
             alien.draw_alien()
     
     def update_fleet(self):
+        """Update fleet position each frame, calls _check_fleet_edges to apply movement"""
         self._check_fleet_edges()
         self.fleet.update()
 
     def check_collisions(self, other_group):
-        #TODO: change collision logic to not always kill on contact and take HP into account
+        """Check for collisions between alien in fleet and bullets.
+        
+        looks for collisions and removes aliens if their hit points are 0
+        """
         collisions = pygame.sprite.groupcollide(self.fleet, other_group, False, True)
 
         for alien, bullets in collisions.items():
@@ -187,6 +208,9 @@ class AlienFleet:
         return collisions
     
     def check_fleet_bottom(self):
+        """Check if any alien has reached the bottom of the screen
+        returns true if bottom has been hit and false otherwise
+        """
         alien: Alien
         for alien in self.fleet:
             if alien.rect.bottom >= self.settings.screen_height:
@@ -194,6 +218,9 @@ class AlienFleet:
         return False
     
     def check_destroyed_status(self):
+        """Determine whether the fleet has been completely destroyed
+        returns True if no aliens remain in fleet
+        """
         return not self.fleet
 
         
