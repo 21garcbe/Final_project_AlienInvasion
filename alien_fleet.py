@@ -1,6 +1,6 @@
 import pygame
+import random
 from alien import Alien
-from game_stats import GameStats
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -144,6 +144,8 @@ class AlienFleet:
         
     def _create_alien(self, current_x: int, current_y: int):
         """Create an alien and place it in the fleet."""
+        #TODO: allow random choice of if alien is flagged tough or not
+
         new_alien = Alien(self, current_x, current_y)
         self.fleet.add(new_alien)
 
@@ -170,6 +172,8 @@ class AlienFleet:
         self.fleet.update()
 
     def check_collisions(self, other_group):
+        #TODO: change collision logic to not always kill on contact and take HP into account
+        
         return pygame.sprite.groupcollide(self.fleet, other_group, True, True)
     
     def check_fleet_bottom(self):

@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 class Alien(Sprite):
     """A class to represent a single alien in the fleet."""
     
-    def __init__(self, fleet: 'AlienFleet', x: float, y: float):
+    def __init__(self, fleet: 'AlienFleet', x: float, y: float, tough: bool = False):
         """Initialize the alien and set its starting position."""
         
         super().__init__()
@@ -22,6 +22,11 @@ class Alien(Sprite):
         self.image = pygame.image.load(self.settings.alien_file)
         self.image = pygame.transform.scale(self.image, (self.settings.alien_width, self.settings.alien_height))
         
+        #TODO: set up tough flag and associated hit point Logic
+        self.is_tough = tough
+        
+
+
         self.rect = self.image.get_rect()
 
         # Start each new alien near the top left of the screen.
