@@ -19,7 +19,7 @@ class Alien(Sprite):
         self.settings = fleet.game.settings
 
         # Load the alien image and set its rect attribute.
-        self.image = pygame.image.load(self.settings.alien_file)
+        self.image = pygame.image.load(self.settings.alien_file).convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.settings.alien_width, self.settings.alien_height))
         
         #TODO: set up tough flag and associated hit point Logic
@@ -29,7 +29,7 @@ class Alien(Sprite):
         if self.is_tough:
             self.hit_points = 2
             self.image = self.image.copy()
-            self.image.fill((40,40,0), special_flags = pygame.BLEND_RGB_ADD)
+            self.image.fill((183,21,242), special_flags = pygame.BLEND_RGB_ADD)
 
 
         self.rect = self.image.get_rect()
