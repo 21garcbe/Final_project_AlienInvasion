@@ -24,7 +24,12 @@ class Alien(Sprite):
         
         #TODO: set up tough flag and associated hit point Logic
         self.is_tough = tough
-        
+        self.hit_points = 1 
+
+        if self.is_tough:
+            self.hit_points = 2
+            self.image = self.image.copy()
+            self.image.fill((40,40,0), special_flags = pygame.BLEND_RGB_ADD)
 
 
         self.rect = self.image.get_rect()

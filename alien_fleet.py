@@ -145,10 +145,13 @@ class AlienFleet:
     def _create_alien(self, current_x: int, current_y: int):
         """Create an alien and place it in the fleet."""
         #TODO: allow random choice of if alien is flagged tough or not
-
-        new_alien = Alien(self, current_x, current_y)
+        tough = self._is_tough_alien
+        new_alien = Alien(self, current_x, current_y, tough = tough)
         self.fleet.add(new_alien)
 
+    def _is_tough_alien(self):
+        return random.random() < 0.20
+    
     def _check_fleet_edges(self):
         alien: Alien
         for alien in self.fleet:
@@ -173,8 +176,15 @@ class AlienFleet:
 
     def check_collisions(self, other_group):
         #TODO: change collision logic to not always kill on contact and take HP into account
+        collisions = pygame.sprite.groupcollide(self.fleet, other_group, False, True)
         
-        return pygame.sprite.groupcollide(self.fleet, other_group, True, True)
+        for alien, bullets in collisions.items():
+            alien.hit_points -= len(bullets)
+
+            if alien.hit_points <= 0:
+                alien.kill()
+
+        return collisions
     
     def check_fleet_bottom(self):
         alien: Alien
