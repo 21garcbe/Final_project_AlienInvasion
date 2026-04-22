@@ -154,7 +154,7 @@ class AlienInvasion:
                 pygame.quit()
                 sys.exit() # Limit to 60 FPS
 
-            elif event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN and self.game_active == True:
                 self._check_keydown_events(event)
                 
             elif event.type == pygame.KEYUP:
