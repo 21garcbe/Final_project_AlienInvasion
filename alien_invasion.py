@@ -5,6 +5,7 @@ from game_stats import GameStats
 from ship import Ship
 from arsenal import Arsenal
 from alien_fleet import AlienFleet
+from button import Button
 
 class AlienInvasion:
     """Overall class to manage game assets and behavior."""
@@ -44,8 +45,11 @@ class AlienInvasion:
         self.alien_fleet = AlienFleet(self)
         self.alien_fleet.create_fleet()
 
-        #set game active flag to True
-        self.game_active = True
+        #set up play button 
+        self.play_button = Button(self, "Play")
+
+        #set game active flag to False
+        self.game_active = False
 
         #set up sound effects
         pygame.mixer.init()
@@ -112,7 +116,17 @@ class AlienInvasion:
         self.alien_fleet.fleet.empty()
         self.alien_fleet.create_fleet()
     
-
+    def restart_game(self):
+        #setting up dynamic settings
+        #reset game stats
+        # update HUD scores
+        #reset level
+        #recenter ship
+        self._reset_level()
+        self.ship._center_ship()
+        self.game_active = True
+        pygame.mouse.set_visible(False)
+        
     def _update_screen(self):
         """Render the current frame to the display.
 
@@ -125,6 +139,11 @@ class AlienInvasion:
         self.ship.draw()
         #call draw fleet function from alien_fleet to draw aliens to screen
         self.alien_fleet.draw_fleet()
+
+        if not self.game_active:
+            self.play_button.draw_button()
+            pygame.mouse.set_visible(True)
+
         pygame.display.flip()
 
     def _check_events(self):
@@ -140,6 +159,16 @@ class AlienInvasion:
                 
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
+            
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                self._check_button_clicked()
+
+    def _check_button_clicked(self):
+        mouse_pos = pygame.mouse.get_pos()
+        if self.play_button.check_clicked(mouse_pos):
+            self.restart_game()
+
+                    
     
     def _check_keydown_events(self, event):
         """Responds to keypresses for movement and firing actions."""
