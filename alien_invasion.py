@@ -25,6 +25,11 @@ class AlienInvasion:
         """
         pygame.init()
         self.settings = Settings()
+
+        #how quickly game speeds up
+        self.speedup_scale = 1.1
+
+        self.settings.initialize_dynamic_settings()
         self.game_stats = GameStats(self.settings.starting_ship_count)
 
 
@@ -100,6 +105,9 @@ class AlienInvasion:
 
         if self.alien_fleet.check_destroyed_status():
             self._reset_level()
+            self.settings.increase_speed()
+            #update game stats level
+            #update HUD view
 
     
     def _check_game_status(self):
@@ -118,11 +126,12 @@ class AlienInvasion:
     
     def restart_game(self):
         #setting up dynamic settings
+        self.settings.initialize_dynamic_settings()
         #reset game stats
         # update HUD scores
         #reset level
-        #recenter ship
         self._reset_level()
+        #recenter ship
         self.ship._center_ship()
         self.game_active = True
         pygame.mouse.set_visible(False)
@@ -139,6 +148,7 @@ class AlienInvasion:
         self.ship.draw()
         #call draw fleet function from alien_fleet to draw aliens to screen
         self.alien_fleet.draw_fleet()
+        #Draw HUD
 
         if not self.game_active:
             self.play_button.draw_button()
