@@ -107,6 +107,8 @@ class AlienInvasion:
             self.impact_sound.fadeout(500)
             self.game_stats.update(collisions)
             self.scoreboard.prep_score()
+            self.scoreboard.prep_hi_score()
+
             
         
 
@@ -115,7 +117,8 @@ class AlienInvasion:
             self.settings.increase_speed()
             #update game stats level
             self.game_stats.update_level()
-            #update HUD view
+            #update HUD displayed level
+            self.scoreboard.prep_level()
 
     
     def _check_game_status(self):
@@ -137,7 +140,12 @@ class AlienInvasion:
         self.settings.initialize_dynamic_settings()
         #reset game stats
         self.game_stats.reset_stats()
+        
         # update HUD scores
+        self.scoreboard.prep_score()
+        self.scoreboard.prep_hi_score()
+        self.scoreboard.prep_level()
+
         #reset level
         self._reset_level()
         #recenter ship
