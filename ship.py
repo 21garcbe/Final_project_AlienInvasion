@@ -72,6 +72,7 @@ class Ship:
         self.return_speed = 2.5
 
     def _center_ship(self):
+        """Reposition the ship to the bottom center of screen ONLY after a collision or other level reset condition"""
         self.rect.midbottom = self.boundaries.midbottom
         self.x_pos = float(self.rect.x)
 
@@ -81,7 +82,10 @@ class Ship:
         self.arsenal.update_arsenal()
 
     def _update_ship_movement(self):
-        """Update the ship's position based on movement flags."""
+        """Update the ship's position and rotation based on movement flags.
+        
+        handles all movements within boundaries and rotation behavior/returning to neutral orientation
+        """
 
         temp_speed = self.settings.ship_speed
         #if movement flag is true and ship is within boundaries, move
@@ -124,6 +128,7 @@ class Ship:
 
         #rotate the original image by the current angle to get the new image
         self.image = pygame.transform.rotate(self.original_image, self.angle)
+        
         #update hitbox to match new rotated image
         self.rect = self.image.get_rect(center=self.rect.center)
 

@@ -6,9 +6,13 @@ if TYPE_CHECKING:
     from alien_fleet import AlienFleet
 
 class Alien(Sprite):
-    """A class to represent a single alien in the fleet."""
+    """A class to represent a single alien in the fleet.
     
-    def __init__(self, fleet: 'AlienFleet', x: float, y: float):
+    Each alien object manages its own position, movement, collisions and rendering. Aliens can be 
+    classified as tough with increased hitpoints
+    """
+    
+    def __init__(self, fleet: 'AlienFleet', x: float, y: float, tough: bool = False):
         """Initialize the alien and set its starting position."""
         
         super().__init__()
@@ -19,28 +23,35 @@ class Alien(Sprite):
         self.settings = fleet.game.settings
 
         # Load the alien image and set its rect attribute.
-        self.image = pygame.image.load(self.settings.alien_file)
+        self.image = pygame.image.load(self.settings.alien_file).convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.settings.alien_width, self.settings.alien_height))
         
+       
+        self.is_tough = tough
+        self.hit_points = 1 
+
+        if self.is_tough:
+            self.hit_points = 2
+            self.image = self.image.copy()
+            self.image.fill((183,21,242), special_flags = pygame.BLEND_RGB_ADD)
+
+
         self.rect = self.image.get_rect()
 
         # Start each new alien near the top left of the screen.
         self.rect.x = x
         self.rect.y = y
 
-       #Store aliens position
+        #Store aliens position
         self.y = float(self.rect.y)
         self.x = float(self.rect.x)
     
     def update(self):
+        """update the aliens position for the current frame
+        
+        Moves the alien horizontally based on fleet direction and speed
+        """
         temp_speed = self.settings.fleet_speed
-
-        #MOVED TO ALIEN_FLEET
-        #check edges and change direction (in settings)
-        #if self.check_edges():
-            #self.settings.fleet_direction *= -1
-        #    self.y += self.settings.fleet_drop_speed
-            
 
         self.x += temp_speed * self.fleet.fleet_direction
         self.rect.x = self.x
