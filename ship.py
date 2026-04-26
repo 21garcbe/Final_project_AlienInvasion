@@ -1,12 +1,12 @@
 import pygame
 from typing import TYPE_CHECKING
-import random
+from pygame.sprite import Sprite
 
 if TYPE_CHECKING:
     from alien_invasion import AlienInvasion
     from arsenal import Arsenal
 
-class Ship:
+class Ship(Sprite):
     """Represent the players ship.
 
     Manages the ships position, movement, rendering, and interaction
@@ -20,6 +20,7 @@ class Ship:
         Loads and scales the ship image, sets up hitbox, associates arsenal 
         for firing bullets, and initializes movement flags.
         """
+        super().__init__()
         self.game = game
         self.settings = game.settings
         self.screen = game.screen

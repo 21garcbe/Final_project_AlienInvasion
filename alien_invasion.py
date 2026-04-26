@@ -3,9 +3,11 @@ import pygame
 import random
 from settings import Settings
 from game_stats import GameStats
+from scoreboard import ScoreBoard
 from ship import Ship
 from arsenal import Arsenal
 from alien_fleet import AlienFleet
+from button import Button
 
 class AlienInvasion:
     """Overall class to manage game assets and behavior."""
@@ -25,11 +27,19 @@ class AlienInvasion:
         """
         pygame.init()
         self.settings = Settings()
-        self.game_stats = GameStats(self.settings.starting_ship_count)
+
+        #how quickly game speeds up
+        self.speedup_scale = 1.1
+
+        self.settings.initialize_dynamic_settings()
+        self.game_stats = GameStats(self)
 
 
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption(self.settings.name)
+
+        #Create Scoreboard instance tot store game stats
+        self.scoreboard = ScoreBoard(self)
 
 
         self.bg = pygame.image.load(self.settings.bg_file)
@@ -45,8 +55,11 @@ class AlienInvasion:
         self.alien_fleet = AlienFleet(self)
         #self.alien_fleet.create_fleet()
 
-        #set game active flag to True
-        self.game_active = True
+        #set up play button 
+        self.play_button = Button(self, "Play")
+
+        #set game active flag to False
+        self.game_active = False
 
         #set up sound effects
         pygame.mixer.init()
@@ -93,6 +106,11 @@ class AlienInvasion:
         if collisions:
             self.impact_sound.play()
             self.impact_sound.fadeout(500)
+            self.game_stats.update(collisions)
+            self.scoreboard.prep_score()
+            self.scoreboard.prep_hi_score()
+
+            
         
         #check for alien fleet destroyed to reset
         if self.alien_fleet.check_destroyed_status():
@@ -125,6 +143,11 @@ class AlienInvasion:
             self.game_stats.current_pattern = "rectangle"
         else:
             self.game_stats.current_pattern = random.choice(["rectangle","triangle","m_shape"])
+            self.settings.increase_speed()
+            #update game stats level
+            self.game_stats.update_level()
+            #update HUD displayed level
+            self.scoreboard.prep_level()
         
 
     def _check_game_status(self):
@@ -133,6 +156,8 @@ class AlienInvasion:
         
         if self.game_stats.ships_left > 0:
             self.game_stats.ships_left -= 1
+            #update ship count on HUD
+            self.scoreboard.prep_ships()
             self._reset_level()
         else: 
             self.game_active = False
@@ -147,7 +172,25 @@ class AlienInvasion:
         self.alien_fleet.fleet.empty()
         self.alien_fleet.create_fleet(self.game_stats.current_pattern)
     
+    def restart_game(self):
+        #setting up dynamic settings
+        self.settings.initialize_dynamic_settings()
+        #reset game stats
+        self.game_stats.reset_stats()
 
+        # update HUD scores and lives
+        self.scoreboard.prep_score()
+        self.scoreboard.prep_hi_score()
+        self.scoreboard.prep_level()
+        self.scoreboard.prep_ships()
+
+        #reset level
+        self._reset_level()
+        #recenter ship
+        self.ship._center_ship()
+        self.game_active = True
+        pygame.mouse.set_visible(False)
+        
     def _update_screen(self):
         """Render the current frame to the display.
 
@@ -160,6 +203,13 @@ class AlienInvasion:
         self.ship.draw()
         #call draw fleet function from alien_fleet to draw aliens to screen
         self.alien_fleet.draw_fleet()
+        #Draw HUD
+        self.scoreboard.show_score()
+        #draw play button if game is inactive
+        if not self.game_active:
+            self.play_button.draw_button()
+            pygame.mouse.set_visible(True)
+
         pygame.display.flip()
 
     def _check_events(self):
@@ -170,11 +220,21 @@ class AlienInvasion:
                 pygame.quit()
                 sys.exit() 
 
-            elif event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN and self.game_active == True:
                 self._check_keydown_events(event)
                 
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
+            
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                self._check_button_clicked()
+
+    def _check_button_clicked(self):
+        mouse_pos = pygame.mouse.get_pos()
+        if self.play_button.check_clicked(mouse_pos):
+            self.restart_game()
+
+                    
     
     def _check_keydown_events(self, event):
         """Responds to keypresses for movement and firing actions.(arrowkeys or WASD)
