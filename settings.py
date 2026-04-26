@@ -14,6 +14,7 @@ class Settings:
         self.FPS = 60
         #set background image file path
         self.bg_file = Path.cwd() / 'Assets' / 'images' / 'Starbasesnow.png'
+        self.scores_file = Path.cwd() / 'Assets' / 'file' / 'scores.json'
 
         #set ship image file path + settings
         self.ship_file = Path.cwd() / 'Assets' / 'images' / 'ship2(no bg).png'
