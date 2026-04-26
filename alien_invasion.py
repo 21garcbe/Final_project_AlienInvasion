@@ -2,6 +2,7 @@ import sys
 import pygame
 from settings import Settings
 from game_stats import GameStats
+from scoreboard import ScoreBoard
 from ship import Ship
 from arsenal import Arsenal
 from alien_fleet import AlienFleet
@@ -35,6 +36,9 @@ class AlienInvasion:
 
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption(self.settings.name)
+
+        #Create Scoreboard instance tot store game stats
+        self.scoreboard = ScoreBoard(self)
 
 
         self.bg = pygame.image.load(self.settings.bg_file)
@@ -152,7 +156,8 @@ class AlienInvasion:
         #call draw fleet function from alien_fleet to draw aliens to screen
         self.alien_fleet.draw_fleet()
         #Draw HUD
-
+        self.scoreboard.show_score()
+        #draw play button if game is inactive
         if not self.game_active:
             self.play_button.draw_button()
             pygame.mouse.set_visible(True)
