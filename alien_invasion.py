@@ -140,11 +140,12 @@ class AlienInvasion:
         self.settings.initialize_dynamic_settings()
         #reset game stats
         self.game_stats.reset_stats()
-        
-        # update HUD scores
+
+        # update HUD scores and lives
         self.scoreboard.prep_score()
         self.scoreboard.prep_hi_score()
         self.scoreboard.prep_level()
+        self.scoreboard.prep_ships()
 
         #reset level
         self._reset_level()

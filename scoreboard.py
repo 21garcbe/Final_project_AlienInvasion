@@ -1,11 +1,15 @@
 import pygame.font
 from typing import TYPE_CHECKING
+from ship import Ship
+from arsenal import Arsenal
+from pygame.sprite import Group
 
 if TYPE_CHECKING:
     from alien_invasion import AlienInvasion
 
 class ScoreBoard:
     def __init__(self, game = 'AlienInvasion'):
+        """Initalize scoreboard attributes and prepare inital images for score, high score, level and ships left"""
         self.game = game
         self.screen = game.screen
         self.screen_rect = self.screen.get_rect()
@@ -23,7 +27,18 @@ class ScoreBoard:
 
         #prepare level
         self.prep_level()
+
+        #prepare ship count display
+        self.prep_ships()
     
+    def prep_ships(self):
+        """Display lives left as ship sprites"""
+        self.ships = Group()
+        for ship_number in range(self.stats.ships_left):
+            ship = Ship(self.game, Arsenal(self.game))
+            ship.rect.x = 10 + ship_number * ship.rect.width
+            ship.rect.y = 10
+            self.ships.add(ship)
     
     def prep_score(self):
         """Turn the score into a rendered image."""
@@ -47,10 +62,11 @@ class ScoreBoard:
         self.hi_screen_rect.top = self.score_rect.top
         
     def show_score(self):
-        """draw score to screen"""
+        """draw score, level and lives left (ship count) to screen"""
         self.screen.blit(self.score_image, self.score_rect)
         self.screen.blit(self.hi_score_image, self.hi_screen_rect)
         self.screen.blit(self.level_image, self.level_rect)
+        self.ships.draw(self.screen)
     
     def prep_level(self):
         """Display level"""
