@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 class GameStats():
 
     def __init__(self, game: 'AlienInvasion'):
-        self.ships_left = self.settings.starting_ship_count
+        self.game = game
         self.settings = game.settings
         self.max_score = 0
         self.reset_stats()

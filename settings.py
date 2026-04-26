@@ -55,14 +55,15 @@ class Settings:
         self.bullet_width = 25
         self.bullet_height = 80
 
-        self.fleet_speed = 8
+        self.fleet_speed = 2
         self.fleet_drop_speed = 15
         self.alien_points = 50
-        
+
 
     def increase_speed(self):
+        self.speedup_scale = 1.1
         self.ship_speed *= self.speedup_scale
         self.bullet_speed *= self.speedup_scale
-        self.alien_speed *= self.speedup_scale
-        
+        self.fleet_speed *= self.speedup_scale
+
 
