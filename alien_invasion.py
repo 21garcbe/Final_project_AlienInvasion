@@ -124,6 +124,8 @@ class AlienInvasion:
     def _check_game_status(self):
         if self.game_stats.ships_left > 0:
             self.game_stats.ships_left -= 1
+            #update ship count on HUD
+            self.scoreboard.prep_ships()
             self._reset_level()
         else: 
             self.game_active = False
