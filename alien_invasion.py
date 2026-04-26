@@ -106,6 +106,7 @@ class AlienInvasion:
             self.impact_sound.play()
             self.impact_sound.fadeout(500)
             self.game_stats.update(collisions)
+            self.scoreboard.prep_score()
             
         
 
