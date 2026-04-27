@@ -17,6 +17,7 @@ class GameStats():
         self.max_score = 0
         self.init_saved_scores()
         self.reset_stats()
+        self.current_pattern = "rectangle"
     
     def init_saved_scores(self):
         """Initialize max score from file"""

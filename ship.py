@@ -1,6 +1,7 @@
 import pygame
 from typing import TYPE_CHECKING
 from pygame.sprite import Sprite
+import random
 
 if TYPE_CHECKING:
     from alien_invasion import AlienInvasion
