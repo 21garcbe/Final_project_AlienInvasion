@@ -109,6 +109,7 @@ class AlienInvasion:
             self.game_stats.update(collisions)
             self.scoreboard.prep_score()
             self.scoreboard.prep_hi_score()
+            self.scoreboard.prep_credits()
 
             
         

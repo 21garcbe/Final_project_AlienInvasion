@@ -25,11 +25,15 @@ class ScoreBoard:
         self.prep_score()
         self.prep_hi_score()
 
+        #prep credits (spendable points)
+        self.prep_credits()
+
         #prepare level
         self.prep_level()
 
         #prepare ship count display
         self.prep_ships()
+
     
     def prep_ships(self):
         """Display lives left as ship sprites"""
@@ -60,12 +64,22 @@ class ScoreBoard:
         self.hi_screen_rect = self.hi_score_image.get_rect()
         self.hi_screen_rect.centerx = self.screen_rect.centerx
         self.hi_screen_rect.top = self.score_rect.top
-        
+    
+    def prep_credits(self):
+        """Render the credits as an image on HUD"""
+        credits_str = f"Credits: {self.stats.credits}"
+        self.credits_image = self.font.render(credits_str, True, self.text_color, None)
+
+        self.credits_rect = self.credits_image.get_rect()
+        self.credits_rect.left = self.screen_rect.left + 20
+        self.credits_rect.bottom = self.screen_rect.bottom - 20
+
     def show_score(self):
         """draw score, level and lives left (ship count) to screen"""
         self.screen.blit(self.score_image, self.score_rect)
         self.screen.blit(self.hi_score_image, self.hi_screen_rect)
         self.screen.blit(self.level_image, self.level_rect)
+        self.screen.blit(self.credits_image, self.credits_rect)
         self.ships.draw(self.screen)
     
     def prep_level(self):
