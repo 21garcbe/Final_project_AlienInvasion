@@ -52,6 +52,7 @@ class Ship(Sprite):
 
         #machine gun firing flad
         self.firing_machine_gun = False
+        self.weapon_mode = "blaster"
 
         
         
@@ -84,7 +85,7 @@ class Ship(Sprite):
     def update(self):
         """Update ships position based on movement flags for current frame, track machine gun fire"""
         self._update_ship_movement()
-        
+
         if self.firing_machine_gun:
             self.arsenal.fire_machine_gun()
 

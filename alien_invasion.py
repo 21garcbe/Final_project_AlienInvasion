@@ -279,13 +279,16 @@ class AlienInvasion:
         elif event.key == pygame.K_e:
             self.ship.rotating_right = True
         elif event.key == pygame.K_SPACE:
-            if self.game_stats.machine_gun_unlocked:
+            if self.ship.weapon_mode == "machine_gun":
                 self.ship.firing_machine_gun = True
             else:
                 if self.ship.fire():
                     #play laser sound effect when firing
                     self.laser_sound.play()
                     self.laser_sound.fadeout(250)
+
+        elif event.key == pygame.K_TAB:
+            self._toggle_weapon_mode()
                 
 
         elif event.key == pygame.K_ESCAPE:
@@ -330,7 +333,18 @@ class AlienInvasion:
             self.game_stats.credits -= cost
             self.game_stats.machine_gun_unlocked = True
             self.scoreboard.prep_credits()
-
+    def _toggle_weapon_mode(self):
+        """Switch between blaster and machine gun if unlocked"""
+        if not self.game_stats.machine_gun_unlocked:
+            print("Machine gun not unlocked")
+            return
+        if self.ship.weapon_mode == "blaster":
+            self.ship.weapon_mode = "machine_gun"
+            print("Switched to machine gun")
+        else:
+            self.ship.weapon_mode = "blaster"
+            self.ship.firing_machine_gun = False
+            print("Switched to blaster")
 if __name__ == '__main__':
     ai = AlienInvasion()
     ai.run_game()
