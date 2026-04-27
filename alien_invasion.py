@@ -190,6 +190,7 @@ class AlienInvasion:
         self.scoreboard.prep_hi_score()
         self.scoreboard.prep_level()
         self.scoreboard.prep_ships()
+        self.store_active = False
 
         #reset level
         self._reset_level()
@@ -256,6 +257,8 @@ class AlienInvasion:
             self.store_active = not self.store_active
             return
         if self.store_active:
+            if event.key == pygame.K_u:
+                self._purchase_machine_gun()
             return
         #Horizontal movement flags
         if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
@@ -313,6 +316,17 @@ class AlienInvasion:
         #machine gun firing flag
         elif event.key == pygame.K_SPACE:     
             self.ship.firing_machine_gun = False
+    def _purchase_machine_gun(self):
+        """Purchase machine gun upgrade if the player has enough credits"""
+        if self.game_stats.machine_gun_unlocked:
+            return
+        
+        cost = self.settings.machine_gun_cost
+        # if player has enough credits, unlock machine gun, deduct credits and update credits on HUD
+        if self.game_stats.credits >= cost:
+            self.game_stats.credits -= cost
+            self.game_stats.machine_gun_unlocked = True
+            self.scoreboard.prep_credits()
 
 if __name__ == '__main__':
     ai = AlienInvasion()
