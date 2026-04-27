@@ -8,6 +8,7 @@ from ship import Ship
 from arsenal import Arsenal
 from alien_fleet import AlienFleet
 from button import Button
+from store_menu import StoreMenu
 
 class AlienInvasion:
     """Overall class to manage game assets and behavior."""
@@ -65,9 +66,14 @@ class AlienInvasion:
         pygame.mixer.init()
         self.laser_sound = pygame.mixer.Sound(self.settings.laser_sound)
         self.laser_sound.set_volume(0.7)
-        #impact sound
+
+        #set up impact sound
         self.impact_sound = pygame.mixer.Sound(self.settings.impact_sound)
         self.impact_sound.set_volume(0.7)
+
+        #set up store menu
+        self.store_menu = StoreMenu(self)
+        self.store_active = False
 
     def run_game(self):
         """Start the main game loop
@@ -77,7 +83,7 @@ class AlienInvasion:
         while self.running:
             #call event listener function
             self._check_events()
-            if self.game_active:
+            if self.game_active and not self.store_active:
                 #update ship position based on movement flags
                 self.ship.update()
                 #update alien fleet 
@@ -89,7 +95,7 @@ class AlienInvasion:
             self.clock.tick(self.settings.FPS)
 
     def _check_collisions(self):
-        """Check collisions between ship and aliens, aliens vs bottom of screen, bullets and aliens"""
+        """Check collisions between ship and aliens, aliens vs bottom of screen, bullets and aliens and checks for level completion/reset."""
 
         #ship collisions
         if self.ship.check_collisions(self.alien_fleet.fleet):
@@ -109,6 +115,7 @@ class AlienInvasion:
             self.game_stats.update(collisions)
             self.scoreboard.prep_score()
             self.scoreboard.prep_hi_score()
+            self.scoreboard.prep_credits()
 
             
         
@@ -173,6 +180,7 @@ class AlienInvasion:
         self.alien_fleet.create_fleet(self.game_stats.current_pattern)
     
     def restart_game(self):
+        """Resets all game stats and instances to start on new game start. Calls initialize_dynamic_setings function on restart"""
         #setting up dynamic settings
         self.settings.initialize_dynamic_settings()
         #reset game stats
@@ -183,6 +191,7 @@ class AlienInvasion:
         self.scoreboard.prep_hi_score()
         self.scoreboard.prep_level()
         self.scoreboard.prep_ships()
+        self.store_active = False
 
         #reset level
         self._reset_level()
@@ -205,6 +214,11 @@ class AlienInvasion:
         self.alien_fleet.draw_fleet()
         #Draw HUD
         self.scoreboard.show_score()
+
+        #draw store menu if active
+        if self.store_active:
+            self.store_menu.draw()
+
         #draw play button if game is inactive
         if not self.game_active:
             self.play_button.draw_button()
@@ -220,7 +234,7 @@ class AlienInvasion:
                 pygame.quit()
                 sys.exit() 
 
-            elif event.type == pygame.KEYDOWN and self.game_active == True:
+            elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
                 
             elif event.type == pygame.KEYUP:
@@ -240,6 +254,16 @@ class AlienInvasion:
         """Responds to keypresses for movement and firing actions.(arrowkeys or WASD)
         Checks for roational movements with "q" and "a" key
         """
+          # Toggle store menu
+        if event.key == pygame.K_m and self.game_active:
+            self.store_active = not self.store_active
+            return
+
+        # Store menu controls
+        if self.store_active:
+            if event.key == pygame.K_1:
+                self._purchase_machine_gun()
+            return
         #Horizontal movement flags
         if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
             self.ship.moving_right = True
@@ -256,17 +280,25 @@ class AlienInvasion:
         elif event.key == pygame.K_e:
             self.ship.rotating_right = True
         elif event.key == pygame.K_SPACE:
-            if self.ship.fire():
-                #play laser sound effect when firing
-                self.laser_sound.play()
-                self.laser_sound.fadeout(250)
+            if self.ship.weapon_mode == "machine_gun":
+                self.ship.firing_machine_gun = True
+            else:
+                if self.ship.fire():
+                    #play laser sound effect when firing
+                    self.laser_sound.play()
+                    self.laser_sound.fadeout(250)
+
+        elif event.key == pygame.K_TAB:
+            self._toggle_weapon_mode()
                 
 
         elif event.key == pygame.K_ESCAPE:
             self.running = False
             pygame.quit()
             sys.exit()
-            
+
+        
+
     def _check_keyup_events(self, event):
         """Responds to key releases (arrowkeys or WASD). Stopping movement when arrow keys are released. 
         Checks for roational movements with "q" and "a" key """
@@ -288,6 +320,32 @@ class AlienInvasion:
         elif event.key == pygame.K_e:
             self.ship.rotating_right = False
 
+        #machine gun firing flag
+        elif event.key == pygame.K_SPACE:     
+            self.ship.firing_machine_gun = False
+    def _purchase_machine_gun(self):
+        """Purchase machine gun upgrade if the player has enough credits"""
+        if self.game_stats.machine_gun_unlocked:
+            return
+        
+        cost = self.settings.machine_gun_cost
+        # if player has enough credits, unlock machine gun, deduct credits and update credits on HUD
+        if self.game_stats.credits >= cost:
+            self.game_stats.credits -= cost
+            self.game_stats.machine_gun_unlocked = True
+            self.scoreboard.prep_credits()
+    def _toggle_weapon_mode(self):
+        """Switch between blaster and machine gun if unlocked"""
+        if not self.game_stats.machine_gun_unlocked:
+            print("Machine gun not unlocked")
+            return
+        if self.ship.weapon_mode == "blaster":
+            self.ship.weapon_mode = "machine_gun"
+            print("Switched to machine gun")
+        else:
+            self.ship.weapon_mode = "blaster"
+            self.ship.firing_machine_gun = False
+            print("Switched to blaster")
 if __name__ == '__main__':
     ai = AlienInvasion()
     ai.run_game()

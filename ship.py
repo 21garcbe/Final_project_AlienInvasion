@@ -11,8 +11,8 @@ class Ship(Sprite):
     """Represent the players ship.
 
     Manages the ships position, movement, rendering, and interaction
-    with its arsenal. The ship can move horizontally within screen
-    boundaries and fire bullets.
+    with its arsenal. The ship can move horizontally and vertically within screen
+    boundaries, rotate 30 degrees either direction and fire bullets.
     """
 
     def __init__(self, game: 'AlienInvasion', arsenal: 'Arsenal'):
@@ -50,6 +50,10 @@ class Ship(Sprite):
         self.moving_up = False
         self.moving_down = False
 
+        #machine gun firing flag
+        self.firing_machine_gun = False
+        self.weapon_mode = "blaster"
+
         
         
 
@@ -74,19 +78,23 @@ class Ship(Sprite):
         self.return_speed = 2.5
 
     def _center_ship(self):
-        """Reposition the ship to the bottom center of screen ONLY after a collision or other level reset condition"""
+        """Reposition the ship to the bottom center of screen ONLY after a alien-player collision or other level reset condition"""
         self.rect.midbottom = self.boundaries.midbottom
         self.x_pos = float(self.rect.x)
 
     def update(self):
-        """Update ships position based on movement flags for current frame"""
+        """Update ships position based on movement flags for current frame, also tracks machine gun fire"""
         self._update_ship_movement()
+
+        if self.firing_machine_gun:
+            self.arsenal.fire_machine_gun()
+
         self.arsenal.update_arsenal()
 
     def _update_ship_movement(self):
         """Update the ship's position and rotation based on movement flags.
         
-        handles all movements within boundaries and rotation behavior/returning to neutral orientation
+        handles all movements within boundaries and handles rotation behavior/returning to neutral orientation
         """
 
         temp_speed = self.settings.ship_speed
@@ -149,6 +157,7 @@ class Ship(Sprite):
         return self.arsenal.fire_bullet()
     
     def check_collisions(self, other_group):
+        """Check for collisions between the ship and aliens"""
         if pygame.sprite.spritecollideany(self,other_group):
             self._center_ship()
             return True

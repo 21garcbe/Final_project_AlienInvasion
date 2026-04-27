@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from alien_invasion import AlienInvasion
 
 class Bullet(Sprite):
-    """Represent a projectile fired from the player's ship.
+    """Represents a projectile fired from the player's ship.
 
     Each bullet maintains its own position, movement behavior, and
     rendering logic. Bullets travel upward from the ship and are
@@ -48,7 +48,7 @@ class Bullet(Sprite):
         """Draw the bullet sprite and hitbox to the screen."""
         self.screen.blit(self.image, self.rect)
 
-#TODO: ensure bullets change position based on ships rotation angle
+
 
 
 

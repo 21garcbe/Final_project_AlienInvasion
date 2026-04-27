@@ -20,6 +20,11 @@ class Arsenal:
         self.game = game
         self.settings = game.settings
         self.arsenal = pygame.sprite.Group()
+        self.last_machine_gun_shot = 0
+        self.machine_gun_burst_count = 0
+        self.machine_gun_reload_start = 0
+        self.machine_gun_reloading = False
+
 
     def update_arsenal(self):
         """Update the position of all bullets in the arsenal.
@@ -55,5 +60,37 @@ class Arsenal:
             return True
         return False
     
+    def fire_machine_gun(self):
+        """Attempt to fire machine gun if under bullet limit and cooldown has passed."""
+        if not self.game.game_stats.machine_gun_unlocked:
+            return False
         
+        now = pygame.time.get_ticks()
+         # If reloading, wait until reload delay finishes.
+        if self.machine_gun_reloading:
+            if now - self.machine_gun_reload_start >= self.settings.machine_gun_reload_delay:
+                self.machine_gun_reloading = False
+                self.machine_gun_burst_count = 0
+            else:
+                return False
+
+        # If burst is empty, start reload.
+        if self.machine_gun_burst_count >= self.settings.machine_gun_burst_size:
+            self.machine_gun_reloading = True
+            self.machine_gun_reload_start = now
+            return False
+
+        # Fire-rate delay between individual shots.
+        if now - self.last_machine_gun_shot < self.settings.machine_gun_fire_delay:
+            return False
+
+        # hard cap on total bullets currently on screen.
+        #if len(self.arsenal) >= self.settings.machine_gun_bullet_limit:
+         #   return False
+
+        new_bullet = Bullet(self.game)
+        self.arsenal.add(new_bullet)
+        self.last_machine_gun_shot = now
+        self.machine_gun_burst_count += 1
+        return True
 

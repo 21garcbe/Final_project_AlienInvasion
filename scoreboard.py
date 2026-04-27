@@ -8,8 +8,9 @@ if TYPE_CHECKING:
     from alien_invasion import AlienInvasion
 
 class ScoreBoard:
+    """A class to record and report scoring information"""
     def __init__(self, game = 'AlienInvasion'):
-        """Initalize scoreboard attributes and prepare inital images for score, high score, level and ships left"""
+        """Initialize scoreboard attributes and prepare initial images for score, high score, level and ships left"""
         self.game = game
         self.screen = game.screen
         self.screen_rect = self.screen.get_rect()
@@ -25,11 +26,15 @@ class ScoreBoard:
         self.prep_score()
         self.prep_hi_score()
 
+        #prep credits (spendable points)
+        self.prep_credits()
+
         #prepare level
         self.prep_level()
 
         #prepare ship count display
         self.prep_ships()
+
     
     def prep_ships(self):
         """Display lives left as ship sprites"""
@@ -52,7 +57,7 @@ class ScoreBoard:
         self.score_rect.top = 20
     
     def prep_hi_score(self):
-        """Render the high score as and image"""
+        """Render the high score as an image"""
         hi_score = round(self.stats.hi_score, -1)
         hi_score_str = f"{hi_score:,}"
         self.hi_score_image = self.font.render(hi_score_str, True, self.text_color, None)
@@ -60,16 +65,26 @@ class ScoreBoard:
         self.hi_screen_rect = self.hi_score_image.get_rect()
         self.hi_screen_rect.centerx = self.screen_rect.centerx
         self.hi_screen_rect.top = self.score_rect.top
-        
+    
+    def prep_credits(self):
+        """Render the credits as an image on HUD"""
+        credits_str = f"Credits: {self.stats.credits}"
+        self.credits_image = self.font.render(credits_str, True, self.text_color, None)
+
+        self.credits_rect = self.credits_image.get_rect()
+        self.credits_rect.left = self.screen_rect.left + 20
+        self.credits_rect.bottom = self.screen_rect.bottom - 20
+
     def show_score(self):
         """draw score, level and lives left (ship count) to screen"""
         self.screen.blit(self.score_image, self.score_rect)
         self.screen.blit(self.hi_score_image, self.hi_screen_rect)
         self.screen.blit(self.level_image, self.level_rect)
+        self.screen.blit(self.credits_image, self.credits_rect)
         self.ships.draw(self.screen)
     
     def prep_level(self):
-        """Display level"""
+        """Display level number as image below score on HUD"""
         level_str = str(self.stats.level)
         self.level_image = self.font.render(level_str, True, self.text_color, None)
 

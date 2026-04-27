@@ -5,7 +5,10 @@ if TYPE_CHECKING:
     from alien_invasion import AlienInvasion
     
 class Button:
+    """A class to manage the play button displayed on the start screen"""
+    
     def __init__(self, game: 'AlienInvasion', msg):
+        """Initialize button attributes and prepare the button message as an image."""
         self.game = game
         self.screen = game.screen
         self.boundaries = self.screen.get_rect()

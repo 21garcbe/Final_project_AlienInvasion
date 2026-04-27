@@ -54,8 +54,11 @@ class GameStats():
         self.ships_left = self.settings.starting_ship_count
         self.score = 0
         self.level = 1
+        self.credits =0
+        self.machine_gun_unlocked = False
 
     def update(self, collisions):
+        """Update game stats based on collisions"""
         #update score
         self._update_score(collisions)
         #update max score
@@ -66,25 +69,30 @@ class GameStats():
 
 
     def _update_max_score(self):
+        """Update max score if current score exceeds it"""
         if self.score > self.max_score:
             self.max_score = self.score
 
-        #print(f"Max score: {self.max_score}")
+        
     
     def _update_hi_score(self):
+        """Update hi score if current score exceeds it"""
         if self.score > self.hi_score:
             self.hi_score = self.score
 
-        #print(f"Hi score: {self.hi_score}")
+      
 
     def _update_score(self, collisions):
+        """Update score and credits based on alien collisions"""
         for alien in collisions:
             self.score += self.settings.alien_points
+            self.credits += self.settings.alien_points
         
-        #print(f"Score: {self.score}")
+        
         
 
     def update_level(self):
+        """Update level and increase game difficulty(speed up aliens)"""
         self.level += 1
         print(f"Level: {self.level}")
     

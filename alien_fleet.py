@@ -120,7 +120,7 @@ class AlienFleet:
 
 
     def calculate_offsets(self, alien_width, alien_height, screen_width, fleet_width, fleet_height):
-        """Calculate forizontal and vertical offsets to center the fleet on screen
+        """Calculate horizontal and vertical offsets to center the fleet on screen
         Positions the fleet horizontally across full screen width and vertically within top half of screen
 
         returns:
@@ -155,7 +155,7 @@ class AlienFleet:
         return int(fleet_width), int(fleet_height)
         
     def _create_alien(self, current_x: int, current_y: int):
-        """Create an alien and place it in the fleet."""
+        """Create an alien and place it in the fleet. Calls _is_tough_alien to determine alien type"""
        
         tough = self._is_tough_alien()
         new_alien = Alien(self, current_x, current_y, tough = tough)
@@ -167,7 +167,7 @@ class AlienFleet:
     
     def _check_fleet_edges(self):
         """Check if any alien in the fleet has hit the left or right edge of the screen
-        if an edge is hit calls _drop_alien_fleet to drop the aliens down and reverses fleet direction
+        if an edge is hit calls _drop_alien_fleet to drop the aliens down and then reverses fleet direction
         """
         alien: Alien
         for alien in self.fleet:
