@@ -4,6 +4,7 @@ class StoreMenu:
     """A class to manage the in game store menu for purchasing upgrades with credits"""
 
     def __init__(self, game):
+        """Initialize the store menu attributes."""
         self.game = game
         self.screen = game.screen
         self.screen_rect = self.screen.get_rect()
@@ -21,7 +22,7 @@ class StoreMenu:
             self.settings.HUD_font_size)
         
     def draw(self):
-        """Draw the store menu panel and text to the screen"""
+        """Draw the store menu panel and text to the screen, calls _get_menu_lines to get the menu body text for rendering on display"""
         panel_rect = self.screen_rect
         self.screen.fill(self.panel_color, panel_rect)
 
@@ -48,6 +49,7 @@ class StoreMenu:
             rect.top = y
 
             self.screen.blit(image, rect)
+
             #body line spacing
             if i == 0:
                 y += 70

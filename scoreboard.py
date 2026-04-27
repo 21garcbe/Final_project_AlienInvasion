@@ -8,8 +8,9 @@ if TYPE_CHECKING:
     from alien_invasion import AlienInvasion
 
 class ScoreBoard:
+    """A class to record and report scoring information"""
     def __init__(self, game = 'AlienInvasion'):
-        """Initalize scoreboard attributes and prepare inital images for score, high score, level and ships left"""
+        """Initialize scoreboard attributes and prepare initial images for score, high score, level and ships left"""
         self.game = game
         self.screen = game.screen
         self.screen_rect = self.screen.get_rect()
@@ -56,7 +57,7 @@ class ScoreBoard:
         self.score_rect.top = 20
     
     def prep_hi_score(self):
-        """Render the high score as and image"""
+        """Render the high score as an image"""
         hi_score = round(self.stats.hi_score, -1)
         hi_score_str = f"{hi_score:,}"
         self.hi_score_image = self.font.render(hi_score_str, True, self.text_color, None)
@@ -83,7 +84,7 @@ class ScoreBoard:
         self.ships.draw(self.screen)
     
     def prep_level(self):
-        """Display level"""
+        """Display level number as image below score on HUD"""
         level_str = str(self.stats.level)
         self.level_image = self.font.render(level_str, True, self.text_color, None)
 

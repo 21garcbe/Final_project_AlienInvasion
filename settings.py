@@ -27,7 +27,21 @@ class Settings:
         self.laser_sound = Path.cwd() / 'Assets' / 'sound' / 'laser.mp3'
         self.impact_sound = Path.cwd() / 'Assets' / 'sound' / 'impactSound.mp3'
         
-       
+        #set ship stats
+        self.ship_speed = 5
+        self.starting_ship_count = 3
+        self.bullet_speed = 7
+        self.bullet_amount = 5
+        self.bullet_width = 25
+        self.bullet_height = 80
+
+        #set up machine gun stats
+        self.machine_gun_cost = 300
+        self.machine_gun_bullet_limit = 10
+        self.machine_gun_fire_delay = 100
+        self.machine_gun_burst_size = 20
+        self.machine_gun_reload_delay = 1000
+
 
         #Alien settings
         self.alien_file = Path.cwd() / 'Assets' / 'images' / 'enemy_4.png'
@@ -48,25 +62,17 @@ class Settings:
         self.font_file = Path.cwd() / 'Assets' / 'fonts' / 'Silkscreen' / "Silkscreen-Bold.ttf"
     
     def initialize_dynamic_settings(self):
-        self.ship_speed = 5
-        self.starting_ship_count = 3
-
-        self.bullet_speed = 7
-        self.bullet_amount = 5
-        self.bullet_width = 25
-        self.bullet_height = 80
+        """Initialize settings that could change throughout the game."""
+        
 
         self.fleet_speed = 1
         self.fleet_drop_speed = 15
         self.alien_points = 50
 
-        self.machine_gun_cost = 300
-        self.machine_gun_bullet_limit = 10
-        self.machine_gun_fire_delay = 100
-        self.machine_gun_burst_size = 20
-        self.machine_gun_reload_delay = 1000
+        
 
     def increase_speed(self):
+        """Increase speed settings"""
         self.speedup_scale = 1.1
         self.ship_speed *= self.speedup_scale
         self.bullet_speed *= self.speedup_scale

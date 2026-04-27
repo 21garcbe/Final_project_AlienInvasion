@@ -95,7 +95,7 @@ class AlienInvasion:
             self.clock.tick(self.settings.FPS)
 
     def _check_collisions(self):
-        """Check collisions between ship and aliens, aliens vs bottom of screen, bullets and aliens"""
+        """Check collisions between ship and aliens, aliens vs bottom of screen, bullets and aliens and checks for level completion/reset."""
 
         #ship collisions
         if self.ship.check_collisions(self.alien_fleet.fleet):
@@ -180,6 +180,7 @@ class AlienInvasion:
         self.alien_fleet.create_fleet(self.game_stats.current_pattern)
     
     def restart_game(self):
+        """Resets all game stats and instances to start on new game start. Calls initialize_dynamic_setings function on restart"""
         #setting up dynamic settings
         self.settings.initialize_dynamic_settings()
         #reset game stats
