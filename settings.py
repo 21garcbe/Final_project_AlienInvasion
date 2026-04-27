@@ -61,8 +61,10 @@ class Settings:
         self.alien_points = 50
 
         self.machine_gun_cost = 300
-        self.machine_gun_bullet_limit = 20
+        self.machine_gun_bullet_limit = 10
         self.machine_gun_fire_delay = 100
+        self.machine_gun_burst_size = 20
+        self.machine_gun_reload_delay = 1000
 
     def increase_speed(self):
         self.speedup_scale = 1.1
