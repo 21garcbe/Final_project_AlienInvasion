@@ -54,6 +54,8 @@ class GameStats():
         self.ships_left = self.settings.starting_ship_count
         self.score = 0
         self.level = 1
+        self.credits =0
+        self.machine_gun_unlocked = False
 
     def update(self, collisions):
         #update score
@@ -80,6 +82,7 @@ class GameStats():
     def _update_score(self, collisions):
         for alien in collisions:
             self.score += self.settings.alien_points
+            self.credits += self.settings.alien_points
         
         #print(f"Score: {self.score}")
         
