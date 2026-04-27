@@ -12,9 +12,14 @@ class StoreMenu:
 
         #font settings for store menu
         self.text_color = self.settings.text_color
-        self.font = pygame.font.Font(self.settings.font_file, self.settings.button_font_size)
         self.panel_color = self.settings.text_color
-    
+
+        self.title_font = pygame.font.Font(self.settings.font_file,self.settings.button_font_size)
+
+        self.body_font = pygame.font.Font(
+            self.settings.font_file,
+            self.settings.HUD_font_size)
+        
     def draw(self):
         """Draw the store menu panel and text to the screen"""
         panel_rect = self.screen_rect
@@ -24,13 +29,30 @@ class StoreMenu:
 
         y = panel_rect.top + 50
 
-        for line in lines:
-            image = self.font.render(line, True, self.settings.button_color, None)
+        for i, line in enumerate(lines):
+            # Title line
+            if i == 0:
+                font = self.title_font
+            else:
+                font = self.body_font
+
+            image = font.render(
+                line,
+                True,
+                self.settings.button_color,
+                None
+            )
+
             rect = image.get_rect()
-            rect.centerx = self.screen_rect.centerx
+            rect.centerx = panel_rect.centerx
             rect.top = y
+
             self.screen.blit(image, rect)
-            y += 45
+            #body line spacing
+            if i == 0:
+                y += 70
+            else:
+                y += 35
     
     def _get_menu_lines(self):
         """Generate the lines of text to show in the menu body"""

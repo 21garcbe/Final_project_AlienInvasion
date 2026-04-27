@@ -233,7 +233,7 @@ class AlienInvasion:
                 pygame.quit()
                 sys.exit() 
 
-            elif event.type == pygame.KEYDOWN and self.game_active == True:
+            elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
                 
             elif event.type == pygame.KEYUP:
@@ -253,11 +253,14 @@ class AlienInvasion:
         """Responds to keypresses for movement and firing actions.(arrowkeys or WASD)
         Checks for roational movements with "q" and "a" key
         """
+          # Toggle store menu
         if event.key == pygame.K_m and self.game_active:
             self.store_active = not self.store_active
             return
+
+        # Store menu controls
         if self.store_active:
-            if event.key == pygame.K_u:
+            if event.key == pygame.K_1:
                 self._purchase_machine_gun()
             return
         #Horizontal movement flags
