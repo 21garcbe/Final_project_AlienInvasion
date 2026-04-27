@@ -17,16 +17,31 @@ class StoreMenu:
     
     def draw(self):
         """Draw the store menu panel and text to the screen"""
-        #draw panel
-        panel_rect = pygame.Rect(0, 0, self.screen_rect.width, self.screen_rect.height)
-        panel_rect.center = self.screen_rect.center
-        pygame.draw.rect(self.screen, self.panel_color, panel_rect)
+        panel_rect = self.screen_rect
+        self.screen.fill(self.panel_color, panel_rect)
 
-        #draw store menu text
-        title_text = "Store Menu"
-        title_image = self.font.render(title_text, True, self.settings.button_color, None)
-        title_rect = title_image.get_rect()
-        title_rect.centerx = self.screen_rect.centerx
-        title_rect.top = self.screen_rect.top + 50
-        self.screen.blit(title_image, title_rect)
-       
+        lines = self._get_menu_lines()
+
+        y = panel_rect.top + 50
+
+        for line in lines:
+            image = self.font.render(line, True, self.settings.button_color, None)
+            rect = image.get_rect()
+            rect.centerx = self.screen_rect.centerx
+            rect.top = y
+            self.screen.blit(image, rect)
+            y += 45
+    
+    def _get_menu_lines(self):
+        """Generate the lines of text to show in the menu body"""
+        machine_gun_text = ( f"1 - Machine Gun Upgrade: {self.settings.machine_gun_cost} credits"
+                                if not self.stats.machine_gun_unlocked 
+                                else "Machine Gun Upgrade: UNLOCKED"
+            )
+        return [ 
+            "STORE MENU",
+            f"Credits: {self.stats.credits}",
+            "",
+            machine_gun_text,
+            "Press M to exit store"
+        ]
