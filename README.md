@@ -16,7 +16,8 @@ items are owned
 at store menu to get upgrades
 9. Machine gun upgrade available for purchase in the store menu, uses cooldown system to 
 make using it more dynamic with bursts requiring a 1 second cooldown 
-
+10. Added rotating arsenal activated by pressing "tab" key to rotate between machine gun and 
+regular blaster (after the upgrade is purchased)
 
 What else I'd like to (and plan to eventually) add for the ship:
 
