@@ -60,6 +60,9 @@ class Settings:
         self.fleet_drop_speed = 15
         self.alien_points = 50
 
+        self.machine_gun_cost = 300
+        self.machine_gun_bullet_limit = 20
+        self.machine_gun_fire_delay = 100
 
     def increase_speed(self):
         self.speedup_scale = 1.1
