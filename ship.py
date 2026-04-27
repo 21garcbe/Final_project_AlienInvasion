@@ -50,6 +50,9 @@ class Ship(Sprite):
         self.moving_up = False
         self.moving_down = False
 
+        #machine gun firing flad
+        self.firing_machine_gun = False
+
         
         
 
@@ -79,8 +82,12 @@ class Ship(Sprite):
         self.x_pos = float(self.rect.x)
 
     def update(self):
-        """Update ships position based on movement flags for current frame"""
+        """Update ships position based on movement flags for current frame, track machine gun fire"""
         self._update_ship_movement()
+        
+        if self.firing_machine_gun:
+            self.arsenal.fire_machine_gun()
+
         self.arsenal.update_arsenal()
 
     def _update_ship_movement(self):

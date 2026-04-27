@@ -8,6 +8,7 @@ from ship import Ship
 from arsenal import Arsenal
 from alien_fleet import AlienFleet
 from button import Button
+from store_menu import StoreMenu
 
 class AlienInvasion:
     """Overall class to manage game assets and behavior."""
@@ -65,9 +66,14 @@ class AlienInvasion:
         pygame.mixer.init()
         self.laser_sound = pygame.mixer.Sound(self.settings.laser_sound)
         self.laser_sound.set_volume(0.7)
-        #impact sound
+
+        #set up impact sound
         self.impact_sound = pygame.mixer.Sound(self.settings.impact_sound)
         self.impact_sound.set_volume(0.7)
+
+        #set up store menu
+        self.store_menu = StoreMenu(self)
+        self.store_active = False
 
     def run_game(self):
         """Start the main game loop
@@ -77,7 +83,7 @@ class AlienInvasion:
         while self.running:
             #call event listener function
             self._check_events()
-            if self.game_active:
+            if self.game_active and not self.store_active:
                 #update ship position based on movement flags
                 self.ship.update()
                 #update alien fleet 
@@ -206,6 +212,11 @@ class AlienInvasion:
         self.alien_fleet.draw_fleet()
         #Draw HUD
         self.scoreboard.show_score()
+
+        #draw store menu if active
+        if self.store_active:
+            self.store_menu.draw()
+
         #draw play button if game is inactive
         if not self.game_active:
             self.play_button.draw_button()
@@ -241,6 +252,11 @@ class AlienInvasion:
         """Responds to keypresses for movement and firing actions.(arrowkeys or WASD)
         Checks for roational movements with "q" and "a" key
         """
+        if event.key == pygame.K_m and self.game_active:
+            self.store_active = not self.store_active
+            return
+        if self.store_active:
+            return
         #Horizontal movement flags
         if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
             self.ship.moving_right = True
@@ -257,17 +273,22 @@ class AlienInvasion:
         elif event.key == pygame.K_e:
             self.ship.rotating_right = True
         elif event.key == pygame.K_SPACE:
-            if self.ship.fire():
-                #play laser sound effect when firing
-                self.laser_sound.play()
-                self.laser_sound.fadeout(250)
+            if self.game_stats.machine_gun_unlocked:
+                self.ship.firing_machine_gun = True
+            else:
+                if self.ship.fire():
+                    #play laser sound effect when firing
+                    self.laser_sound.play()
+                    self.laser_sound.fadeout(250)
                 
 
         elif event.key == pygame.K_ESCAPE:
             self.running = False
             pygame.quit()
             sys.exit()
-            
+
+        
+
     def _check_keyup_events(self, event):
         """Responds to key releases (arrowkeys or WASD). Stopping movement when arrow keys are released. 
         Checks for roational movements with "q" and "a" key """
@@ -288,6 +309,10 @@ class AlienInvasion:
             self.ship.rotating_left = False
         elif event.key == pygame.K_e:
             self.ship.rotating_right = False
+
+        #machine gun firing flag
+        elif event.key == pygame.K_SPACE:     
+            self.ship.firing_machine_gun = False
 
 if __name__ == '__main__':
     ai = AlienInvasion()
